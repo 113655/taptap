@@ -493,6 +493,6 @@ class CommunityFragment : Fragment() {
     }
 
     companion object {
-        private const val COMMUNITY_URL = "https://sulor.yanyususu.online/"
+        private const val COMMUNITY_URL = "about:blank"
     }
 }

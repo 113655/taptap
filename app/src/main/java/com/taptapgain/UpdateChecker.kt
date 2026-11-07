@@ -77,6 +77,9 @@ class UpdateChecker(private val activity: Activity) {
      * @param silent 静默模式：仅在发现新版本时弹窗，不弹"已是最新/网络错误"提示（冷启动用）。
      */
     fun check(silent: Boolean = false) {
+        // 依依自用版：不连作者服务器检查更新
+        if (!silent) Toast.makeText(activity, "依依自用版，不联网检查更新", Toast.LENGTH_SHORT).show()
+        if (true) return
         if (checking) return
         checking = true
         scope.launch {
@@ -371,7 +374,7 @@ class UpdateChecker(private val activity: Activity) {
         private const val TAG = "UpdateChecker"
         // 服务器根地址（用户部署在 https://ark.yanyususu.online/tapsulor/）。
         // 末尾需保留斜杠以拼 version.json 路径。
-        private const val UPDATE_BASE_URL = "https://ark.yanyususu.online/tapsulor/"
+        private const val UPDATE_BASE_URL = "https://127.0.0.1/"
         private const val VERSION_JSON_PATH = "version.json"
     }
 }

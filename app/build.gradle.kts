@@ -18,7 +18,7 @@ android {
     // GeckoView 只提供 arm64-v8a 单架构变体,过滤 ABI 减少 APK 体积
     // (绝大多数现代 Android 设备(含小米)都是 arm64-v8a;Android 12+ 新设备强制 arm64)
     defaultConfig {
-        applicationId = "com.taptapgain"
+        applicationId = "com.yiyi.taptapgain"
         minSdk = 26
         targetSdk = 34
         versionCode = 6
