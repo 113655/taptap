@@ -24,9 +24,13 @@
   // 依依版：详情页也加上按键音（跟首页同一个开关）
   (function detailSfx() {
     const clickSnd = new Audio('audio/tapsulor_pixel_click.mp3');
+    const soundOn = () => { try { return localStorage.getItem('taptap_sound_enabled') !== '0'; } catch (_) { return true; } };
+    // 进入详情页时响一下；离开时（返回按钮或手机返回键）让首页响
+    try { if (sessionStorage.getItem('nav_sfx') === '1') { sessionStorage.removeItem('nav_sfx'); if (soundOn()) { clickSnd.play().catch(() => {}); } } } catch (_) {}
+    window.addEventListener('pagehide', () => { try { sessionStorage.setItem('nav_sfx', '1'); } catch (_) {} });
     document.addEventListener('click', (e) => {
       const el = e.target && e.target.closest && e.target.closest('button, a[href], [role="button"], .game-card, .theme-dot, .studio-item, .daily-cell.is-clickable, [data-date], [data-view], label.switch, input[type="checkbox"], select, summary');
-      if (!el || el.disabled) return;
+      if (!el || el.disabled || el.id === 'back-btn') return;
       let on = true;
       try { on = localStorage.getItem('taptap_sound_enabled') !== '0'; } catch (_) {}
       if (!on) return;

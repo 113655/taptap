@@ -21,8 +21,8 @@ android {
         applicationId = "com.yiyi.taptapgain"
         minSdk = 26
         targetSdk = 34
-        versionCode = 8
-        versionName = "1.0.5-yiyi3"
+        versionCode = 9
+        versionName = "1.0.5-yiyi4"
         ndk {
             abiFilters += listOf("arm64-v8a")
         }

@@ -6,3 +6,7 @@
 [data-theme=dark][data-accent=coffee]{--accent-soft:#3A2C1F}
 .theme-dot[data-accent=coffee]{--dot:linear-gradient(135deg,#A9825E,#CDAE8C)}
 [data-theme=sepia] .mode-switch button{background:var(--bg-card)}
+
+/* ===== 依依版：开屏换成全屏图 ===== */
+#splash,#splash.splash-dark{background:#000 url(../splash.jpg) center/cover no-repeat!important}
+#splash .splash-logo,#splash .splash-brand,#splash .splash-tagline{display:none!important}

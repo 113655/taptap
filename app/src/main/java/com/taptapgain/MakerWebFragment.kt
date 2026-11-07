@@ -210,7 +210,8 @@ class MakerWebFragment : Fragment() {
             webContainer.addView(splash)
             splashView = splash
             splashShownInProcess = true
-            playSplashSound(ctx)
+            // 依依版：去掉刺耳的启动音
+            // playSplashSound(ctx)
             scheduleSplashFallback()
         }
 

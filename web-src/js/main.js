@@ -96,9 +96,12 @@
   // 依依版：所有“按下去有反应”的东西都响一下（原本自己会响的就不重复响）
   document.addEventListener('click', (e) => {
     const el = e.target && e.target.closest && e.target.closest('button, a[href], [role="button"], .game-card, .theme-dot, .studio-item, .daily-cell.is-clickable, [data-date], [data-view], label.switch, input[type="checkbox"], select, summary');
-    if (!el || el.disabled) return;
+    if (!el || el.disabled || el.closest('.game-card')) return;
     setTimeout(() => { if (Date.now() - lastSfxAt > 80) playSfx('click'); }, 0);
   }, true);
+
+  // 依依版：从详情页回来时响一下
+  try { if (sessionStorage.getItem('nav_sfx') === '1') { sessionStorage.removeItem('nav_sfx'); setTimeout(() => playSfx('click'), 30); } } catch (_) {}
 
   // ========== 工具 ==========
   function fmt(n) {
@@ -1032,6 +1035,7 @@
 
   function openDetail(game) {
     sessionStorage.setItem('currentGame', JSON.stringify(game));
+    try { sessionStorage.setItem('nav_sfx', '1'); } catch (_) {}
     window.location.href = 'detail.html?app_id=' + game.appId;
   }
 
@@ -1756,9 +1760,7 @@
     }
     sessionStorage.setItem('splash_played', '1');
     // 播放进入音效（尊重音效开关）
-    if (soundEnabled) {
-      try { sounds.splash.currentTime = 0; sounds.splash.play().catch(() => {}); } catch (_) {}
-    }
+    // 依依版：开屏不再放声音
     // 展示约 1.4s 后淡出
     setTimeout(() => {
       splash.classList.add('is-done');
