@@ -21,6 +21,19 @@
 (function () {
   'use strict';
 
+  // 依依版：详情页也加上按键音（跟首页同一个开关）
+  (function detailSfx() {
+    const clickSnd = new Audio('audio/tapsulor_pixel_click.mp3');
+    document.addEventListener('click', (e) => {
+      const el = e.target && e.target.closest && e.target.closest('button, a[href], [role="button"], .game-card, .theme-dot, .studio-item, .daily-cell.is-clickable, [data-date], [data-view], label.switch, input[type="checkbox"], select, summary');
+      if (!el || el.disabled) return;
+      let on = true;
+      try { on = localStorage.getItem('taptap_sound_enabled') !== '0'; } catch (_) {}
+      if (!on) return;
+      try { clickSnd.currentTime = 0; clickSnd.play().catch(() => {}); } catch (_) {}
+    }, true);
+  })();
+
   // 主题同步（设置在首页，存 localStorage；与主界面读取同一键）
   (function syncTheme() {
     try {

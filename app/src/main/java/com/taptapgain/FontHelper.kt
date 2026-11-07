@@ -68,7 +68,8 @@ object FontHelper {
         CYAN("cyan", "#25B6E9"),
         PINK("pink", "#FF7FB3"),
         PURPLE("purple", "#8B7CF6"),
-        MINT("mint", "#36C9A0");
+        MINT("mint", "#36C9A0"),
+        COFFEE("coffee", "#A9825E");
         companion object {
             fun fromKey(key: String?): Accent = values().firstOrNull { it.key == key } ?: CYAN
         }

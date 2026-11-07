@@ -83,13 +83,22 @@
   };
   Object.values(sounds).forEach(sound => { sound.preload = 'auto'; });
 
+  let lastSfxAt = 0;
   function playSfx(name) {
+    lastSfxAt = Date.now();
     if (!soundEnabled) return;
     const sound = sounds[name];
     if (!sound) return;
     sound.currentTime = 0;
     sound.play().catch(() => {});
   }
+
+  // 依依版：所有“按下去有反应”的东西都响一下（原本自己会响的就不重复响）
+  document.addEventListener('click', (e) => {
+    const el = e.target && e.target.closest && e.target.closest('button, a[href], [role="button"], .game-card, .theme-dot, .studio-item, .daily-cell.is-clickable, [data-date], [data-view], label.switch, input[type="checkbox"], select, summary');
+    if (!el || el.disabled) return;
+    setTimeout(() => { if (Date.now() - lastSfxAt > 80) playSfx('click'); }, 0);
+  }, true);
 
   // ========== 工具 ==========
   function fmt(n) {

@@ -96,6 +96,7 @@ class WebAppInterface(
             .putString("theme_accent", accent ?: "cyan")
             .putString("font_family", font ?: "default")
             .apply()
+        activity.runOnUiThread { (activity as? MainActivity)?.applyBottomNavAccent() }
     }
 
     @JavascriptInterface fun openLogin(mode: String?) {

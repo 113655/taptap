@@ -315,9 +315,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     /** 底部导航选中色跟随用户主题色(accent),未选中色跟随日夜间模式。 */
-    private fun applyBottomNavAccent() {
+    fun applyBottomNavAccent() {
         val accent = FontHelper.currentAccentColor(this)
-        val unselected = ContextCompat.getColor(this, R.color.nav_unselected)
+        // 依依版：底栏背景跟着 App 里选的模式走（浅色/深色/护眼），不再跟系统
+        val mode = getSharedPreferences("taptap_prefs", MODE_PRIVATE).getString("theme_mode", "light")
+        val (bg, unselected) = when (mode) {
+            "dark" -> Pair(android.graphics.Color.parseColor("#1E242F"), android.graphics.Color.parseColor("#80FFFFFF"))
+            "sepia" -> Pair(android.graphics.Color.parseColor("#FBF5E8"), android.graphics.Color.parseColor("#997A6550"))
+            else -> Pair(android.graphics.Color.parseColor("#FFFFFF"), android.graphics.Color.parseColor("#801A1A1A"))
+        }
+        bottomNav.setBackgroundColor(bg)
         val csl = ColorStateList(
             arrayOf(
                 intArrayOf(android.R.attr.state_checked),
