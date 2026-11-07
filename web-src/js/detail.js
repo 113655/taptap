@@ -724,7 +724,7 @@
           const conv = rec.dau > 0 ? (rec.revenue / rec.dau * 100).toFixed(0) + '%' : '—';
           inner = `<div class="dc-day">${day}</div>` +
                   `<div class="dc-revenue">¥${fmt(rec.revenue)}</div>` +
-                  `<div class="dc-sub">${fmtInt(rec.dau)} · <span class="dc-conv">${conv}</span></div>`;
+                  `<div class="dc-sub">${fmtInt(rec.dau)}</div><div class="dc-sub"><span class="dc-conv">${conv}</span></div>`;
         } else {
           inner = `<div class="dc-day">${day}</div>` +
                   `<div class="dc-today-label">今日</div>` +
@@ -738,7 +738,7 @@
       if (!rec || (revenue == null && dau === 0)) cls += ' is-empty';
       inner = `<div class="dc-day">${day}</div>` +
               `<div class="dc-revenue">${revenue == null ? '未同步' : '¥' + fmt(revenue)}</div>` +
-              `<div class="dc-sub">${fmtInt(dau)} · <span class="dc-conv">${conv}</span></div>`;
+              `<div class="dc-sub">${fmtInt(dau)}</div><div class="dc-sub"><span class="dc-conv">${conv}</span></div>`;
       }
 
       // 非未来日期可点击查看当天详情

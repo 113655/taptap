@@ -590,16 +590,34 @@
       // 7) 昨日曝光（position/cn 接口）
       const p7 = fetchGamePositionRange(appId, dayBefore, yesterday).then(posMap => {
         const yPos = posMap[yesterday];
+        const dPos = posMap[dayBefore];
         g.todayImpression = yPos ? (yPos.impression || 0) : null;
+        g.prevDayImpression = dPos ? (dPos.impression || 0) : null;
       }).catch(e => {
         console.warn(`[${g.name}] 昨日曝光获取失败:`, e.message);
-        g.todayImpression = null;
+        g.todayImpression = null; g.prevDayImpression = null;
       }).finally(() => {
         g.impressionLoading = false; renderAll();
       });
 
+      // 8) 今日实时：日活 / 新增（依依版新增；接口不给今天的数据就显示"暂未出"）
+      g.liveLoading = true;
+      const p8 = fetchGameDAURange(appId, today, today).then(m => {
+        const t = m[today];
+        g.liveDAU = t ? t.dau : null;
+        g.liveNew = t ? t.newUsers : null;
+      }).catch(() => { g.liveDAU = null; g.liveNew = null; });
+
+      // 9) 今日实时：曝光
+      const p9 = fetchGamePositionRange(appId, today, today).then(m => {
+        const t = m[today];
+        g.liveImpression = t ? (t.impression || 0) : null;
+      }).catch(() => { g.liveImpression = null; });
+
+      const pLive = Promise.all([p8, p9]).finally(() => { g.liveLoading = false; renderAll(); });
+
       // 等全部完成
-      await Promise.all([p1, p2, p3, p4, p5, p6, p7]);
+      await Promise.all([p1, p2, p3, p4, p5, p6, p7, pLive]);
     }
 
     // 并发受限的批次运行器：每次最多 MAX_CONCURRENCY 个游戏在飞
@@ -893,8 +911,24 @@
         impressionHTML = `<div class="game-metric-value muted">—</div>
                           <div class="game-metric-label">昨日曝光未同步</div>`;
       } else {
+        const momImp = momTagHTML(g.todayImpression, g.prevDayImpression);
         impressionHTML = `<div class="game-metric-value">${fmtInt(g.todayImpression)}</div>
-                          <div class="game-metric-label">昨日曝光</div>`;
+                          <div class="game-metric-label">昨日曝光 ${momImp}</div>`;
+      }
+
+      // 今日实时条（依依版新增）
+      let liveHTML = '';
+      if (g.published) {
+        const v = x => x == null ? '—' : fmtInt(x);
+        const none = g.liveDAU == null && g.liveNew == null && g.liveImpression == null;
+        liveHTML = g.liveLoading
+          ? `<div class="live-strip muted"><span class="live-tag">今日</span><span>同步中…</span></div>`
+          : none
+            ? `<div class="live-strip muted"><span class="live-tag">今日</span><span>后台暂未出今日数据</span></div>`
+            : `<div class="live-strip"><span class="live-tag">今日</span>` +
+              `<span class="live-item"><b>${v(g.liveImpression)}</b>曝光</span>` +
+              `<span class="live-item"><b>${v(g.liveNew)}</b>新增</span>` +
+              `<span class="live-item"><b>${v(g.liveDAU)}</b>日活</span></div>`;
       }
 
       // 名称下方展示累计广告收益金额
@@ -935,6 +969,7 @@
               ${impressionHTML}
             </div>
           </div>
+          ${liveHTML}
         </div>
       `;
     }).join('');
